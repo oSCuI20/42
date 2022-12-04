@@ -6,14 +6,13 @@
 /*   By: edbander <edbander@student.42malaga.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/04 13:43:25 by edbander          #+#    #+#             */
-/*   Updated: 2022/12/04 13:43:31 by edbander         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:30:34 by edbander         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-include "libft.h"
+#include "libft.h"
 
-	int
-	ft_isascii(int c)
+int	ft_isascii(int c)
 {
 	return (c >= 0 && c <= 127);
 }
