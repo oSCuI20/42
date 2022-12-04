@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 char    *ft_strrchr(char *str, int c)
 {
         int len;
@@ -19,6 +21,5 @@ char    *ft_strrchr(char *str, int c)
                 if (str[len] == c)
                         return (&str[len]);
         }
-
-        return (0);
+        return (NULL);
 }

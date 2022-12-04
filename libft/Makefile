@@ -11,8 +11,8 @@
 # **************************************************************************** #
 
 # source code
-SRC_DIR = src
-INC_DIR = headers
+SRC_DIR = .
+INC_DIR = .
 
 # compile and flags
 CC = gcc
@@ -21,15 +21,32 @@ CFLAGS = -Wall -Werror -Wextra
 EFLAGS = -c -I$(INC_DIR)/
 NAME = libft.a
 
-# destination 
+# destination
 OBJ_DIR = obj
 BIN_DIR = bin
 
-# rules 
-OBJS = $(OBJ_DIR)/ft_string_manipulation.o \
-       $(OBJ_DIR)/ft_string_search.o \
-       $(OBJ_DIR)/ft_string_validation.o \
-       $(OBJ_DIR)/ft_string_utils.o
+# rules
+OBJS = $(OBJ_DIR)/ft_atoi.o \
+			 $(OBJ_DIR)/ft_bzero.o \
+			 $(OBJ_DIR)/ft_isalnum.o \
+			 $(OBJ_DIR)/ft_isalpha.o \
+			 $(OBJ_DIR)/ft_isascii.o \
+			 $(OBJ_DIR)/ft_isdigit.o \
+			 $(OBJ_DIR)/ft_isprint.o \
+			 $(OBJ_DIR)/ft_memchr.o \
+			 $(OBJ_DIR)/ft_memcmp.o \
+			 $(OBJ_DIR)/ft_memcpy.o \
+			 $(OBJ_DIR)/ft_memmove.o \
+			 $(OBJ_DIR)/ft_memset.o \
+			 $(OBJ_DIR)/ft_strchr.o \
+			 $(OBJ_DIR)/ft_strlcat.o \
+			 $(OBJ_DIR)/ft_strlcpy.o \
+			 $(OBJ_DIR)/ft_strlen.o \
+			 $(OBJ_DIR)/ft_strncmp.o \
+			 $(OBJ_DIR)/ft_strnstr.o \
+			 $(OBJ_DIR)/ft_strrchr.o \
+			 $(OBJ_DIR)/ft_tolower.o \
+			 $(OBJ_DIR)/ft_toupper.o
 
 define BUILD_O
 	@echo "Compiling: $<"
