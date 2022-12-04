@@ -15,12 +15,13 @@
 int	ft_isspace(int c);
 int	ft_issign(int c);
 
-int	ft_atoi(char *str)
+int	ft_atoi(const char *str)
 {
 	long	n;
 	int		i;
 	int		sign;
 
+	n = 0;
 	i = 0;
 	sign = 1;
 	while (ft_isspace(str[i]))
