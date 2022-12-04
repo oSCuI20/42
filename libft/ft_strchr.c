@@ -14,11 +14,19 @@
 
 char	*ft_strchr(char *str, int c)
 {
-	int	i;
+	size_t	i;
+	size_t	len;
 
-	i = -1;
-	while (i++ && str[i] != '\0')
-		if (str[i] == c)
-			return (&str[i]);
-	return (0);
+	if (str)
+	{
+		i = 0;
+		len = ft_strlen(str);
+		while (i <= len)
+		{
+			if (str[i] == (c & 0xff))
+				return (&str[i]);
+			i++;
+		}
+	}
+	return (NULL);
 }
