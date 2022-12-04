@@ -6,25 +6,45 @@
 /*   By: edbander <edbander@student.42malaga.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/04 13:36:55 by edbander          #+#    #+#             */
-/*   Updated: 2022/12/04 13:41:36 by edbander         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:59:51 by edbander         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+int	ft_isspace(int c);
+int	ft_issign(int c);
+
 int	ft_atoi(char *str)
 {
-	int	n;
-	int	i;
-	int	sign;
+	long	n;
+	int		i;
+	int		sign;
 
 	i = 0;
 	sign = 1;
-	while (str[i] == ' ')
+	while (ft_isspace(str[i]))
 		i++;
-	if (str[i] == '-')
-		sign *= -1;
-	while (ft_isdigit(str[++i]))
+	if (ft_issign(str[i]))
+	{
+		if (str[i] == '-')
+			sign *= -1;
+		i++;
+	}
+	while (ft_isdigit(str[i]))
+	{
 		n = (n * 10) + str[i] - 48;
+		i++;
+	}
 	return (n * sign);
+}
+
+int	ft_isspace(int c)
+{
+	return (c == ' ' || (c >= 9 && c <= 13));
+}
+
+int	ft_issign(int c)
+{
+	return (c == '-' || c == '+');
 }

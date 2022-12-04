@@ -6,7 +6,7 @@
 /*   By: ebanderas <edbander@student.42malaga.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 21:49:24 by ebanderas         #+#    #+#             */
-/*   Updated: 2022/11/29 23:39:24 by ebanderas        ###   ########.fr       */
+/*   Updated: 2022/12/04 14:41:19 by edbander         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int		ft_strncmp(char *s1, char *s2, size_t n);
 int		ft_tolower(int c);
 int		ft_toupper(int c);
 
-size_t	ft_strlen(char *str);
+size_t	ft_strlen(const char *str);
 size_t	ft_strlcat(char *dest, char *src, size_t size);
 size_t	ft_strlcpy(char *dest, char *src, size_t size);
 

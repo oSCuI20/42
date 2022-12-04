@@ -6,7 +6,7 @@
 /*   By: edbander <edbander@student.42malaga.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/04 13:37:32 by edbander          #+#    #+#             */
-/*   Updated: 2022/12/04 13:37:34 by edbander         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:35:01 by edbander         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,5 @@
 
 int	ft_isalnum(int c)
 {
-	return (ft_isalpha(c) && ft_isdigit(c));
+	return (ft_isalpha(c) || ft_isdigit(c));
 }

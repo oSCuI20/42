@@ -6,7 +6,7 @@
 /*   By: edbander <edbander@student.42malaga.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/04 13:47:00 by edbander          #+#    #+#             */
-/*   Updated: 2022/12/04 13:47:17 by edbander         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:02:09 by edbander         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	*ft_memcpy(void *dst, const void *src, size_t len)
 {
-	size_t				i;
 	unsigned char		*cdst;
 	const unsigned char	*csrc;
 
@@ -22,12 +21,8 @@ void	*ft_memcpy(void *dst, const void *src, size_t len)
 	csrc = src;
 	if (len > 0 && src != dst)
 	{
-		i = 0;
-		while (i < len)
-		{
-			cdst[i] = csrc[i];
-			i++;
-		}
+		while (len--)
+			*cdst++ = *csrc++;
 	}
 	return (dst);
 }
