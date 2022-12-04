@@ -1,34 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edbander <edbander@student.42malaga.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/04 14:10:23 by edbander          #+#    #+#             */
-/*   Updated: 2022/12/04 14:10:24 by edbander         ###   ########.fr       */
+/*   Created: 2022/12/01 19:50:55 by edbander          #+#    #+#             */
+/*   Updated: 2022/12/04 13:50:06 by edbander         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dest, const char *src, size_t size)
+char	*ft_strdup(const char *str)
 {
-	size_t	len;
-	size_t	i;
+	char		*pointer;
+	size_t		len;
 
-	i = 0;
-	len = 0;
-	while (src[len] != '\0')
-		len++;
-	if (size != 0)
-	{
-		while (i < size - 1 && src[i] != '\0')
-		{
-			dest[i] = src[i];
-			i++;
-		}
-		dest[i] = '\0';
-	}
-	return (len);
+	len = ft_strlen(str) + 1;
+	pointer = (char *)ft_calloc(len, sizeof(char *));
+	if (!pointer)
+		return (NULL);
+	ft_memcpy(pointer, str, len);
+	return (pointer);
 }

@@ -6,7 +6,7 @@
 #    By: ebanderas <edbander@student.42malaga.      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/29 21:56:15 by ebanderas         #+#    #+#              #
-#    Updated: 2022/12/04 23:14:01 by ebanderas        ###   ########.fr        #
+#    Updated: 2022/12/05 00:14:04 by ebanderas        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ OBJS = $(OBJ_DIR)/ft_atoi.o \
 			 $(OBJ_DIR)/ft_isascii.o \
 			 $(OBJ_DIR)/ft_isdigit.o \
 			 $(OBJ_DIR)/ft_isprint.o \
+			 $(OBJ_DIR)/ft_calloc.o \
 			 $(OBJ_DIR)/ft_memchr.o \
 			 $(OBJ_DIR)/ft_memcmp.o \
 			 $(OBJ_DIR)/ft_memcpy.o \
@@ -46,7 +47,8 @@ OBJS = $(OBJ_DIR)/ft_atoi.o \
 			 $(OBJ_DIR)/ft_strnstr.o \
 			 $(OBJ_DIR)/ft_strrchr.o \
 			 $(OBJ_DIR)/ft_tolower.o \
-			 $(OBJ_DIR)/ft_toupper.o
+			 $(OBJ_DIR)/ft_toupper.o \
+			 $(OBJ_DIR)/ft_strdup.o
 
 define BUILD_O
 	@echo "Compiling: $<"
