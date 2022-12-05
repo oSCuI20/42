@@ -1,38 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_substr.c                                        :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebanderas <edbander@student.42malaga.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/05 03:04:42 by ebanderas         #+#    #+#             */
-/*   Updated: 2022/12/05 03:04:43 by ebanderas        ###   ########.fr       */
+/*   Created: 2022/12/05 07:15:44 by ebanderas         #+#    #+#             */
+/*   Updated: 2022/12/05 07:15:46 by ebanderas        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_substr(const char *s, unsigned int start, size_t len)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
-	char		*sub;
-	size_t		i;
-	size_t		slen;
+	size_t		s1len;
+	size_t		s2len;
+	char		*joined;
 
-	slen = ft_strlen(s);
-	sub = ft_calloc(1, 1);
-	if (start < slen)
+	s1len = ft_strlen(s1);
+	s2len = ft_strlen(s2);
+	joined = (char *)ft_calloc(s1len + s2len + 1, sizeof(char));
+	if (joined)
 	{
-		free(sub);
-		if (len > (slen - start))
-			len = slen - start;
-		sub = (char *)ft_calloc(len + 1, sizeof(char));
-		i = 0;
-		while (sub && start < slen && len--)
-		{
-			sub[i] = s[start];
-			start++;
-			i++;
-		}
+		ft_strlcat(joined, s1, s1len + 1);
+		ft_strlcat(joined, s2, s1len + s2len + 1);
 	}
-	return (sub);
+	return (joined);
 }
