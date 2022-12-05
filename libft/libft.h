@@ -32,7 +32,7 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 
 char	*ft_strdup(const char *str);
 char	*ft_strchr(char *str, int c);
-char	*ft_strnstr(char *str, char *sfind, size_t flen);
+char	*ft_strnstr(const char *str, const char *sfind, size_t flen);
 char	*ft_strrchr(char *str, int c);
 
 int		ft_memcmp(const void *b1, const void *b2, size_t len);
@@ -42,4 +42,6 @@ void	*ft_memchr(void *v, int c, size_t len);
 void	*ft_memcpy(void *dst, const void *src, size_t len);
 void	*ft_memmove(void *dst, const void *src, size_t len);
 void	*ft_memset(void *b, int c, size_t len);
+
+char	*ft_substr(const char *s, unsigned int start, size_t len);
 #endif

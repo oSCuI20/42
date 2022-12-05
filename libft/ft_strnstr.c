@@ -12,13 +12,15 @@
 
 #include "libft.h"
 
-char	*ft_strnstr(char *str, char *sfind, size_t flen)
+char	*ft_strnstr(const char *str, const char *sfind, size_t flen)
 {
 	size_t	i;
 	size_t	len;
 
 	len = 0;
 	i = 0;
+	if (!str[i] && sfind[i])
+		return (NULL);
 	while (str[i] && sfind[len])
 	{
 		len = 0;
@@ -29,5 +31,5 @@ char	*ft_strnstr(char *str, char *sfind, size_t flen)
 		if (sfind[len])
 			i++;
 	}
-	return (&str[i]);
+	return ((char *)&str[i]);
 }

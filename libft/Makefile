@@ -6,7 +6,7 @@
 #    By: ebanderas <edbander@student.42malaga.      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/29 21:56:15 by ebanderas         #+#    #+#              #
-#    Updated: 2022/12/05 00:14:04 by ebanderas        ###   ########.fr        #
+#    Updated: 2022/12/05 02:14:00 by ebanderas        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,8 @@ OBJS = $(OBJ_DIR)/ft_atoi.o \
 			 $(OBJ_DIR)/ft_strrchr.o \
 			 $(OBJ_DIR)/ft_tolower.o \
 			 $(OBJ_DIR)/ft_toupper.o \
-			 $(OBJ_DIR)/ft_strdup.o
+			 $(OBJ_DIR)/ft_strdup.o \
+			 $(OBJ_DIR)/ft_substr.o 
 
 define BUILD_O
 	@echo "Compiling: $<"
