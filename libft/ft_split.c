@@ -55,11 +55,6 @@ static char	*ft_substr_split(const char *str, size_t start, char c)
 	return (ptr);
 }
 
-/*
- * ft_strlen_split
- *
- *	Count char in the string and return the number of occurrences.
- */
 static size_t	ft_strlen_split(const char *str, char c)
 {
 	size_t	slen;
@@ -86,11 +81,6 @@ static size_t	ft_strlen_split(const char *str, char c)
 	return (slen + 1);
 }
 
-/*
- * ft_strlen_by_delimiter
- *
- * Count chars to delimiter
- */
 static size_t	ft_strlen_by_delimiter(const char *str, char c)
 {
 	size_t	len;
