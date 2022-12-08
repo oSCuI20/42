@@ -54,7 +54,12 @@ OBJS = $(OBJ_DIR)/ft_atoi.o \
 			 $(OBJ_DIR)/ft_strtrim.o \
  			 $(OBJ_DIR)/ft_split.o \
 			 $(OBJ_DIR)/ft_itoa.o \
-			 $(OBJ_DIR)/ft_strmapi.o
+			 $(OBJ_DIR)/ft_strmapi.o \
+			 $(OBJ_DIR)/ft_striteri.o \
+			 $(OBJ_DIR)/ft_putchar_fd.o \
+			 $(OBJ_DIR)/ft_putstr_fd.o \
+			 $(OBJ_DIR)/ft_putendl_fd.o \
+			 $(OBJ_DIR)/ft_putnbr_fd.o
 
 define BUILD_O
 	@echo "Compiling: $<"

@@ -42,6 +42,11 @@ char	*ft_itoa(int n);
 char	*ft_strmapi(const char *s, char (*fn)(unsigned int, char));
 
 int		ft_memcmp(const void *b1, const void *b2, size_t len);
+void	ft_striteri(char *s, void (*fn)(unsigned int, char*));
+void	ft_putchar_fd(char c, int fd);
+void	ft_putstr_fd(char *s, int fd);
+void	ft_putendl_fd(char *s, int fd);
+void	ft_putnbr_fd(int n, int fd);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nelem, size_t size);
 void	*ft_memchr(void *v, int c, size_t len);
