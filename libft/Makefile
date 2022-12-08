@@ -50,7 +50,10 @@ OBJS = $(OBJ_DIR)/ft_atoi.o \
 			 $(OBJ_DIR)/ft_toupper.o \
 			 $(OBJ_DIR)/ft_strdup.o \
 			 $(OBJ_DIR)/ft_substr.o \
-			 $(OBJ_DIR)/ft_strjoin.o 
+			 $(OBJ_DIR)/ft_strjoin.o \
+			 $(OBJ_DIR)/ft_strtrim.o \
+ 			 $(OBJ_DIR)/ft_split.o
+
 define BUILD_O
 	@echo "Compiling: $<"
 	@mkdir -p $(OBJ_DIR)

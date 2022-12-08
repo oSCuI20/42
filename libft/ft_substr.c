@@ -19,10 +19,8 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 	size_t		slen;
 
 	slen = ft_strlen(s);
-	sub = ft_calloc(1, 1);
 	if (start < slen)
 	{
-		free(sub);
 		if (len > (slen - start))
 			len = slen - start;
 		sub = (char *)ft_calloc(len + 1, sizeof(char));
@@ -33,6 +31,8 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 			start++;
 			i++;
 		}
+		return (sub);
 	}
+	sub = ft_calloc(1, 1);
 	return (sub);
 }
