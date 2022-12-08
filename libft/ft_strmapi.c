@@ -19,6 +19,8 @@ char	*ft_strmapi(const char *s, char (*fn)(unsigned int, char))
 
 	slen = ft_strlen(s);
 	ptr = (char *)ft_calloc(slen + 1, sizeof(char));
+	if (!ptr)
+		return (NULL);
 	while (slen--)
 		ptr[slen] = fn(slen, s[slen]);
 	return (ptr);
