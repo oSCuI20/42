@@ -14,7 +14,7 @@
 
 static size_t	ft_strlen_split(const char *str, char c);
 static size_t	ft_strlen_by_delimiter(const char *str, char c);
-static char	*ft_substr_split(const char *str, size_t start, char c);
+static char		*ft_substr_split(const char *str, size_t start, char c);
 
 char	**ft_split(const char *str, char c)
 {

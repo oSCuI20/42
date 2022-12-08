@@ -38,6 +38,7 @@ char	*ft_substr(const char *s, unsigned int start, size_t len);
 char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_strtrim(const char *s1, const char *set);
 char	**ft_split(const char *str, char delimiter);
+char  *ft_itoa(int n);
 
 int		ft_memcmp(const void *b1, const void *b2, size_t len);
 void	ft_bzero(void *s, size_t n);
