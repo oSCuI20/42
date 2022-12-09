@@ -22,7 +22,7 @@ EFLAGS = -c -I$(INC_DIR)/
 NAME = libft.a
 
 # destination
-OBJ_DIR = obj
+OBJ_DIR = .
 BIN_DIR = bin
 
 # rules
@@ -61,6 +61,16 @@ OBJS = $(OBJ_DIR)/ft_atoi.o \
 			 $(OBJ_DIR)/ft_putendl_fd.o \
 			 $(OBJ_DIR)/ft_putnbr_fd.o
 
+OBJS_BONUS = $(OBJ_DIR)/ft_lstadd_back.o \
+			 			 $(OBJ_DIR)/ft_lstadd_front.o \
+			 			 $(OBJ_DIR)/ft_lstclear.o \
+			 			 $(OBJ_DIR)/ft_lstdelone.o \
+			 			 $(OBJ_DIR)/ft_lstiter.o \
+			 			 $(OBJ_DIR)/ft_lstlast.o \
+			 			 $(OBJ_DIR)/ft_lstmap.o \
+			 			 $(OBJ_DIR)/ft_lstnew.o \
+			 			 $(OBJ_DIR)/ft_lstsize.o
+
 define BUILD_O
 	@echo "Compiling: $<"
 	@mkdir -p $(OBJ_DIR)
@@ -71,16 +81,19 @@ $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
 	$(BUILD_O)
 
 $(NAME): $(OBJS)
-	$(AR) r $(NAME) $(OBJS)
+	$(AR) rcs $(NAME) $(OBJS)
 	@echo "Finish libft compilation"
 
 all: $(NAME)
 
 clean:
-	rm -Rf $(OBJ_DIR)/*
+	rm -Rf $(OBJS)
+	rm -Rf $(OBJS_BONUS)
 
-fclean:
-	rm -Rf $(OBJ_DIR)
+fclean: clean
 	rm -Rf $(NAME)
 
 re: fclean all
+
+bonus: $(OBJS_BONUS)
+	$(AR) rcs $(NAME) $(OBJS_BONUS)

@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <string.h>
+#include <stdio.h>
 
 char	*ft_strnstr(const char *str, const char *sfind, size_t flen)
 {
@@ -26,7 +28,7 @@ char	*ft_strnstr(const char *str, const char *sfind, size_t flen)
 		len = 0;
 		while (sfind[len] && str[i + len] == sfind[len])
 			len++;
-		if (len + i > flen || !str[i + 1])
+		if (len + i > flen || (!str[i + 1] && sfind[len]))
 			return (NULL);
 		if (sfind[len])
 			i++;

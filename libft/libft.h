@@ -53,4 +53,10 @@ void	*ft_memchr(void *v, int c, size_t len);
 void	*ft_memcpy(void *dst, const void *src, size_t len);
 void	*ft_memmove(void *dst, const void *src, size_t len);
 void	*ft_memset(void *b, int c, size_t len);
+
+typedef struct s_list
+{
+	void					*content;
+	struct s_list			*next;
+}								t_list;
 #endif
