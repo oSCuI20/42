@@ -10,4 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 
+void	ft_lstiter(t_list *lst, void (*f)(void *))
+{
+	t_list	*el;
+
+	if (lst)
+	{
+		el = lst;
+		f(el->content);
+		while (el->next)
+		{
+			el = el->next;
+			f(el->content);
+		}
+	}
+}
