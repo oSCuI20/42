@@ -6,7 +6,7 @@
 #    By: edbander <edbander@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/29 21:56:15 by ebanderas         #+#    #+#              #
-#    Updated: 2022/12/21 07:48:53 by edbander         ###   ########.fr        #
+#    Updated: 2023/01/09 07:31:17 by edbander         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ OBJS = $(OBJ_DIR)/conversion/ft_atoi.o \
 			 $(OBJ_DIR)/conversion/ft_itoa.o \
 			 $(OBJ_DIR)/conversion/ft_split.o \
 			 $(OBJ_DIR)/conversion/ft_strmapi.o \
+			 $(OBJ_DIR)/conversion/ft_tobase.o \
 			 $(OBJ_DIR)/memory/ft_bzero.o \
 			 $(OBJ_DIR)/memory/ft_calloc.o \
 			 $(OBJ_DIR)/memory/ft_memchr.o \
@@ -58,6 +59,7 @@ OBJS = $(OBJ_DIR)/conversion/ft_atoi.o \
 			 $(OBJ_DIR)/string/ft_strlcat.o \
 			 $(OBJ_DIR)/string/ft_strlcpy.o \
 			 $(OBJ_DIR)/string/ft_strlen.o \
+			 $(OBJ_DIR)/string/ft_intlen.o \
 			 $(OBJ_DIR)/string/ft_strncmp.o \
 			 $(OBJ_DIR)/string/ft_strnstr.o \
 			 $(OBJ_DIR)/string/ft_strrchr.o \

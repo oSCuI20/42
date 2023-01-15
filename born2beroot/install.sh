@@ -19,12 +19,12 @@ usermod -aG user42 ${MYUSER}
 # install sudo and config
 apt install sudo
 
-cat << EOCAT
+echo "
 Warning!
 You are use sudo command!
-EOCAT > /etc/sudoers.d/.message
+" > /etc/sudoers.d/.message
 
-cat << EOCAT
+echo "
 #
 # Default configuration for sudoers
 #
@@ -40,26 +40,26 @@ Defaults      log_input,log_output
 Defaults      requiretty
 
 @includedir /etc/sudoers.d
-EOCAT > /etc/sudoers
+" > /etc/sudoers
 
-cat << EOCAT
+echo "
 #
 # Alias specification
 #
-EOCAT > /etc/sudoers.d/00-aliases
+" > /etc/sudoers.d/00-aliases
 
-cat << EOCAT
+echo "
 #
 # Allow members of groups
 #
 %sudo     ALL=(ALL:ALL) ALL
-EOCAT > /etc/sudoers.d/00-allow-members-groups
+" > /etc/sudoers.d/00-allow-members-groups
 
 echo "
 #
 # Allow command or script without password
 #
-$MYUSER   ALL=(ALL) NOPASSWD: /usr/local/bin/monitoring.sh
+${MYUSER}   ALL=(ALL) NOPASSWD: /usr/local/bin/monitoring.sh
 " > /etc/sudoers.d/00-allow-command
 
 usermod -aG sudo ${MYUSER}
@@ -68,7 +68,7 @@ usermod -aG sudo ${MYUSER}
 # strong passwords
 apt install libpam-pwquality
 
-cat << EOCAT
+echo "
 #
 # /etc/pam.d/common-password - password-related modules common to all services
 #
@@ -77,9 +77,9 @@ password	[success=1 default=ignore]	pam_unix.so obscure use_authtok try_first_pa
 password	requisite			pam_deny.so
 password	required			pam_permit.so
 password	optional	pam_gnome_keyring.so
-EOCAT > /etc/pam.d/common-password
+" > /etc/pam.d/common-password
 
-cat << EOCAT
+echo "
 MAIL_DIR        /var/mail
 FAILLOG_ENAB		yes
 LOG_UNKFAIL_ENAB	no
@@ -122,11 +122,11 @@ CHFN_RESTRICT		rwh
 DEFAULT_HOME	yes
 USERGROUPS_ENAB yes
 ENCRYPT_METHOD SHA512
-EOCAT > /etc/login.defs
+" > /etc/login.defs
 # end strong passwords
 
 # ssh services
-cat << EOCAT
+echo "
 Include /etc/ssh/sshd_config.d/*.conf
 
 Port 4242
@@ -193,7 +193,7 @@ Subsystem	sftp	/usr/lib/openssh/sftp-server
 #	AllowTcpForwarding no
 #	PermitTTY no
 #	ForceCommand cvs server
-EOCAT > /etc/ssh/sshd_config
+" > /etc/ssh/sshd_config
 
 # install apparmor
 apt install apparmor apparmor-utils apparmor-profiles apparmor-profiles-extra
@@ -208,3 +208,12 @@ echo "Y" > /sys/module/apparmor/parameters/enabled
 aa-status
 
 echo "*/10 * * * * /usr/local/bin/monitoring.sh" >> /var/spool/cron/crontabs/root
+
+
+# bonus 
+apt install lighttpd mariadb-server php php-cgi php-fpm php-mysql -y
+
+lighty-enable-mod fastcgi
+lighty-enable-mod fastcgi-php
+
+systemctl enable lighttpd php-fpm mariadb
