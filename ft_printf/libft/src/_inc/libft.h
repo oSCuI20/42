@@ -6,7 +6,7 @@
 /*   By: edbander <edbander@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 21:49:24 by ebanderas         #+#    #+#             */
-/*   Updated: 2023/01/09 07:36:56 by edbander         ###   ########.fr       */
+/*   Updated: 2023/01/22 21:53:22 by edbander         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*ft_itoa(int n);
 char	*ft_itoa_unsinged_int(unsigned int n);
 char	**ft_split(const char *str, char delimiter);
 char	*ft_strmapi(const char *s, char (*fn)(unsigned int, char));
-char	*ft_itoahex(long long laddr, char *format, int lower);
+//char	*ft_itoahex(long long laddr, char *format, int lower);
 char	*ft_itoahex_unsigned_long(
 			unsigned long long number,
 			char *format,
@@ -85,6 +85,7 @@ int		ft_tolower(int c);
 int		ft_toupper(int c);
 size_t	ft_strlen(const char *str);
 size_t	ft_intlen(long long num, int base);
+size_t	ft_intlen_unsigned(unsigned long long num, int base);
 size_t	ft_strlcat(char *dest, const char *src, size_t size);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 char	*ft_strdup(const char *str);

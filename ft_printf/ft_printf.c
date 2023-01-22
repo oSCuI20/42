@@ -6,7 +6,7 @@
 /*   By: edbander <edbander@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/13 01:09:54 by edbander          #+#    #+#             */
-/*   Updated: 2023/01/09 07:49:38 by edbander         ###   ########.fr       */
+/*   Updated: 2023/01/22 22:24:59 by edbander         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,26 +77,34 @@ static int	_ft_printf_arg(char type, va_list args)
 
 static char	*_ft_printf_arg_hex(char type, va_list args)
 {
-	char		*format;
+	char				*format;
+	char				*ptr;
+	unsigned long long	longarg;
 
 	format = "";
 	if (type == 'p')
 	{
 		format = "0x";
+		longarg = (unsigned long long) va_arg(args, unsigned long);
+		if (!longarg)
+			return ("(nil)");
 		return (ft_itoahex_unsigned_long(
-				va_arg(args, unsigned long long), format, type - 'X'));
+				longarg,
+				format,
+				type - 'X'));
 	}
 	return (ft_itoahex_unsigned_long(
-			va_arg(args, unsigned int), format, type - 'X'));
+			(unsigned long long) va_arg(args, unsigned int),
+			format,
+			type - 'X'));
 }
 
 static int	_ft_putchar(char type, va_list args)
 {
-	char	c;
-
-	c = va_arg(args, int);
 	if (type == '%')
-		c = '%';
-	ft_putchar_fd(c, 1);
+		ft_putchar_fd('%', 1);
+	else 
+		ft_putchar_fd(va_arg(args, int), 1);
+
 	return (1);
 }
