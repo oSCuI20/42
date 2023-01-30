@@ -1,0 +1,4 @@
+#
+# Allow members of groups
+#
+%sudo     ALL=(ALL:ALL) ALL

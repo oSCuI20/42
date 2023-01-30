@@ -1,0 +1,22 @@
+#!/bin/sh
+
+PREREQ="udev devpts indicator movilmodem networking"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+. /scripts/functions
+
+log_begin_msg "Watchdog"
+/opt/mnggateway /dev/ttyAMA0 8 259200 > /dev/null  # 72 horas
+log_end_msg

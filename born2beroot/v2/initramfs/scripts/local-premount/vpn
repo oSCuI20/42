@@ -1,0 +1,47 @@
+#!/bin/sh
+
+PREREQ="udev devpts indicador networking movilmodem"
+
+prereqs() {
+	echo "$PREREQ"
+}
+
+case "$1" in
+	prereqs)
+		prereqs
+		exit 0
+	;;
+esac
+
+. /scripts/functions
+
+{
+  pid_exists() {
+    p=$(/bin/ps -o comm)
+    printf "${p}" | /bin/grep -q "${1}"
+    return $?
+  }
+
+  while true; do
+    if ! /usr/sbin/ntpdate -b 0.debian.pool.ntp.org; then
+      sleep 120
+    else
+      break
+    fi
+  done
+
+  while true; do
+    if /bin/ping -c 2 8.8.8.8; then  #Hay conexión
+      if ! pid_exists "openvpn"; then  #Si no existe pid de openvpn
+        /usr/sbin/openvpn --config /etc/openvpn/client.conf
+      fi
+    else
+      if pid_exists "openvpn"; then  #Si pid openvpn existe
+        killall -9 openvpn
+      fi
+    fi
+    sleep 120  #2 minutos
+  done
+} > /dev/null 2> /dev/null < /dev/null &
+
+write_pid "vpn"

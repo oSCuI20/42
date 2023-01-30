@@ -1,0 +1,26 @@
+#!/bin/sh
+
+PREREQ=""
+prereqs() { echo "$PREREQ"; }
+
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+
+if [ ! -x /usr/bin/bc ]; then
+  printf "Hook networking requiere comando bc"
+  exit 1
+fi
+
+if [ ! -x /sbin/ip ]; then
+  printf "Hook networking requiere comando ip"
+	exit 1
+fi
+
+copy_exec "/usr/bin/bc"
+copy_exec "/sbin/ip"

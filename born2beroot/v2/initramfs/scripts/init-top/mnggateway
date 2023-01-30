@@ -1,0 +1,22 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+. /scripts/functions
+
+log_begin_msg "Watchdog"
+/opt/mnggateway /dev/ttyAMA0 8 1800 > /dev/null  #30 minutos
+log_end_msg

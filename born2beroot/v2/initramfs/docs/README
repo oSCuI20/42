@@ -1,0 +1,68 @@
+Modo Rescate.
+
+# Información general
+
+  - Fichero de configuración.
+    Lee un fichero de configuración si existe, éste se encuentra en la primera
+    partición de la tarjeta SD y el nombre del fichero es `cfg_helpme.cfg`. La
+    variable de configuración se denomina `h_maxcount` y su valor por defecto es
+    10. Este valor indica el número máximo de intentos para acceder al modo
+    rescate. El modo rescate dispone de un mecanismo de decremento del valor y
+    cuando llegue a 0 el sistema entra en modo rescate.
+    Este mecanismo se incorporá debido a que un instalador puede reiniciar varias
+    veces el servidor intermedio hasta finalizar su labor.
+
+  - Fichero /helpme.
+    El modo rescate crea/modifica un fichero llamado `helpme` en el sistema de
+    ficheros raíz y escribe el valor que toque. El sistema de ficheros raíz
+    debe intentar eliminar el fichero `helpme` en cada inicio.
+    Si el fichero existe, lee el contenido.
+     * Si contenido no es un número, accede al modo rescate.
+     * Si es un número lo resta en 1.
+     * Si el número es menor o igual a 0, accede al modo rescate.
+
+  - Fichero /helpme_by_coreconfws.
+    El modo rescate comprueba la existencia del fichero `helpme_by_coreconfws`
+    en el sistema de ficheros raíz.
+     * Si el fichero existe, lo elimina y accede al modo rescate.
+
+    Este fichero lo crea coreconf a petición de un usuario.
+    El motivo de utilizar un nuevo fichero es para distinguir cuándo entra al
+    modo rescate a petición de un usuario de cuando entra por algún tipo de error.
+
+# Compatibilidad
+  - Debian 8 (Jessie)
+  - En Debian 9 (Stretch) no funciona correctamente con la nueva versión de
+    initramfs-tools
+
+# Requisitos
+  - Instalación de los paquetes necesarios. Revisar la versión de busybox a utilizar.
+    $ apt-get install initramfs-tools console-setup subversion bc dropbear ntpdate
+    # Si es armv7
+    $ wget http://ftp.us.debian.org/debian/pool/main/b/busybox/busybox_1.27.2-2_armhf.deb
+    # Si es armv6
+    $ wget http://ftp.us.debian.org/debian/pool/main/b/busybox/busybox_1.27.2-2_armel.deb
+
+  - Configuración.
+    $ cd /usr/share/initramfs-tools
+    $ rm -Rf *
+    $ Copiar el contenido de initramfs en /usr/share/initramfs-tools/.
+
+  - Crear imagen con `mkinitramfs`
+    La creación de las imágenes debe realizar utilizando el mismo kernel donde
+    se vaya a instalar. Es decir, si la versión del kernel del sistema donde se
+    va a instalar el modo rescate es la 4.4.14 la versión del kernel donde se
+    genere debe tener instalado el mismo kernel
+    $ mkinitramfs -d /usr/share/initramfs-tools/confdir -o /tmp/initrd-`uname -r`
+
+# Instalación
+  - Fichero /boot/cmdline.txt
+    dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait quiet
+
+  - Fichero /boot/config.txt
+    Añadir al final del fichero:
+     gpu_men=32
+     initramfs <nombre del fichero> followkernel
+
+  - Copiar imagen initramfs.
+    $ cp /path/to/image/<nombre del fichero> /boot/.

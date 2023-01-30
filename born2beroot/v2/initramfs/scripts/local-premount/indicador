@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+# Led Indicador del modo rescate
+#
+
+PREREQ="udev devpts"
+
+prereqs() {
+	echo "$PREREQ"
+}
+
+case "$1" in
+	prereqs)
+		prereqs
+		exit 0
+	;;
+esac
+
+. /scripts/functions
+
+is_old_rpi_version || {
+  log_begin_msg "Iniciando led indicador de actividad"
+  #LED INDICADOR DE ACTIVIDAD
+  echo "6" > /sys/class/gpio/export
+  echo "out" > /sys/class/gpio/gpio6/direction
+  ####
+  i=0
+
+  {
+  while true; do
+    [ $i -gt 1 ] && [ $i -ne 0 ] && i=0
+    echo "$i" > /sys/class/gpio/gpio6/value
+    i=$(($i+1))
+    sleep 0.5
+  done
+  } > /dev/null 2> /dev/null < /dev/null &
+
+  write_pid "indicador"
+  log_end_msg
+}

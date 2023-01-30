@@ -1,0 +1,78 @@
+#!/bin/sh
+
+PREREQ=""
+prereqs() { echo "$PREREQ"; }
+
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+
+if [ ! -x /usr/bin/lsusb ]; then
+  printf "Hook movilmodem requiere comando lsusb"
+  exit 1
+fi
+
+if [ ! -x /usr/sbin/pppd ]; then
+  printf "Hook movilmodem requiere comando pppd"
+  exit 1
+fi
+
+if [ ! -x /usr/sbin/chat ]; then
+  printf "Hook movilmodem requiere comando chat"
+  exit 1
+fi
+
+mkdir -p ${DESTDIR}/usr/lib/python2.7
+
+mkdir -p ${DESTDIR}/etc
+mkdir -p ${DESTDIR}/var/lib
+
+
+copy_exec "/usr/bin/python"
+copy_exec "/srv/gsm/gsm.py"
+cp -r /etc/python2.7 ${DESTDIR}/etc/.
+cp -r /usr/lib/python2.7/* ${DESTDIR}/usr/lib/python2.7/.
+
+# Load modules for movilmodem
+force_load ppp_generic
+force_load cdc_acm
+
+# pppd binary
+copy_exec "/usr/sbin/pppd"
+copy_exec "/usr/sbin/chat"
+
+# pppd libs
+for lib in `ls /usr/lib/pppd`; do
+  mkdir -p ${DESTDIR}/usr/lib/pppd
+  cp -R /usr/lib/pppd/${lib} ${DESTDIR}/usr/lib/pppd/.
+done
+
+# pppd config files /etc/ppp, /etc/chatscripts
+cp -RL /etc/ppp ${DESTDIR}/etc/.
+cp -RL /etc/chatscripts ${DESTDIR}/etc/.
+
+# pon poff
+copy_exec "/usr/bin/pon"
+copy_exec "/usr/bin/poff"
+
+# lsusb binary
+copy_exec "/usr/bin/lsusb"
+cp -R /var/lib/usbutils ${DESTDIR}/var/lib/.
+
+# usb utils
+copy_exec "/usr/local/bin/usbreset"
+copy_exec "/usr/local/bin/uhubctl"
+copy_exec "/usr/sbin/usb_modeswitch"
+
+cp -R /etc/usb_modeswitch.d ${DESTDIR}/etc/.
+mkdir -p /var/lib/usb_modeswitch
+
+cat > "${DESTDIR}/etc/usb_modeswitch.conf" <<EOF
+DisableSwitching=0
+EnableLogging=0
+EOF

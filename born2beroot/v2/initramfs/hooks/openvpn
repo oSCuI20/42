@@ -1,0 +1,48 @@
+#!/bin/sh
+
+PREREQ=""
+prereqs() { echo "$PREREQ"; }
+
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+
+if [ ! -x /usr/sbin/openvpn ]; then
+  printf "Hook openvpn requiere comando openvpn"
+  exit 1
+fi
+
+if [ ! -x /usr/bin/openssl ]; then
+  printf "Hook openvpn requiere comand openssl"
+  exit 1
+fi
+
+force_load tun
+force_load lzo
+
+# openvpn binary
+copy_exec /usr/sbin/openvpn
+
+# openssl binary
+copy_exec /usr/bin/openssl
+
+# openvpn libs
+for lib in `ls /usr/lib/openvpn`
+do
+  mkdir -p ${DESTDIR}/usr/lib/openvpn
+  cp -R /usr/lib/openvpn/${lib} ${DESTDIR}/usr/lib/openvpn/.
+done
+
+# openvpn include
+mkdir -p ${DESTDIR}/usr/include/openvpn
+for inc in `ls /usr/include/openvpn`; do
+  cp -RL /usr/include/openvpn/${inc} ${DESTDIR}/usr/include/openvpn/.
+done
+
+# openvpn config files /etc/openvp
+cp -RL ${CONFDIR}/etc/openvpn ${DESTDIR}/etc/.

@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# Led Indicador del modo rescate
+#
+
+PREREQ=""
+
+prereqs() {
+	echo "$PREREQ"
+}
+
+case "$1" in
+	prereqs)
+		prereqs
+		exit 0
+	;;
+esac
+
+. /scripts/functions
+
+log_begin_msg "Parando el script networking"
+
+/sbin/ip addr  flush dev eth0
+/sbin/ip route flush dev eth0
+
+/sbin/ip link dev eth0 down
+
+log_end_msg

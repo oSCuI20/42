@@ -1,0 +1,235 @@
+#!/bin/sh
+#
+# modemcontrol.sh [forced]
+# Adaptacion del script /usr/local/bin/modemcontrol.sh
+# para initramfs
+
+PREREQ="udev devpts indicador networking"
+
+prereqs() {
+	echo "$PREREQ"
+}
+
+case "$1" in
+	prereqs)
+		prereqs
+		exit 0
+	;;
+esac
+
+. /scripts/functions
+
+log_begin_msg "Load movilmodem device"
+
+is_old_rpi_version || {
+  #SE ACTIVA EL MODEM INTERNO (si existe)
+  echo "26" > /sys/class/gpio/export
+  echo "19" > /sys/class/gpio/export
+
+  modprobe cdc_acm
+  echo "out" > /sys/class/gpio/gpio26/direction ;
+  echo "1"   > /sys/class/gpio/gpio26/value     ; sleep 1
+
+  echo "out" > /sys/class/gpio/gpio19/direction ;
+  echo "1"   > /sys/class/gpio/gpio19/value     ; sleep 1
+  echo "0"   > /sys/class/gpio/gpio19/value     ;
+  ####
+}
+
+sleep 10
+
+[ -c /dev/ppp ] || mknod /dev/ppp c 108 0
+
+_CFG_MOVILMODEM=/conf/sim/cfg_movilmodem.cfg
+_IDMODEM='1e0e:0020'    # Qualcomm
+
+### Detección del módem
+[ -f ${_CFG_MOVILMODEM} ] && . ${_CFG_MOVILMODEM} || exit 1
+
+INTERNALMODEM=false
+
+for i in ${_IDMODEM}; do
+  if /usr/bin/lsusb | grep -q "${i}"; then
+    INTERNALMODEM=true
+  fi
+done
+# Fin
+
+
+usbmodem() {
+  #$1 => m_serial
+  devid=0
+  values=$(/usr/bin/lsusb | \
+           /bin/sed -r -e \
+  's/^B.*\ (.*)\ D.*\ (.*): ID\ ([0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}).*$/\1 \2 \3/' |\
+           /bin/head -1)
+
+  busid=${values:0:3}   # Bus ID
+  devid=${values:4:3}   # Device ID
+  usbid=${values:8}     # USB ID
+
+  [ "${usbid}" == "12d1:1446" ] || [ "${usbid}" == "12d1:1506" ] && \
+    m_line=2  # Módem negro
+  [ "${usbid}" == "12d1:1c0b" ] || [ "${usbid}" == "12d1:1c05" ] && \
+    m_line=0  # Módem blanco
+
+  if [ ${devid} -gt 3 ]; then
+    echo "[$(date +%Y-%m-%d_%H:%M:%S)] ${0} Reload device => ${values}" >> /root/csclient.log
+    sleep 5
+    /usr/sbin/usb_modeswitch -c /etc/usb_modeswitch.d/${usbid} > /dev/null
+    modprobe -r option usb_wwan usbserial
+    # /usr/local/bin/usbreset /dev/bus/usb/${busid}/${devid}
+    modprobe option; modprobe usb_wwan; modprobe usbserial;
+    sleep 5
+    /usr/sbin/usb_modeswitch -c /etc/usb_modeswitch.d/${usbid} > /dev/null
+  fi
+}  #usbmodem
+
+
+write_configuration_files() {
+  echo "\
+#USERNAME  PROVIDER  PASSWORD  IPADDRESS
+$m_user * $m_pass" > /etc/ppp/chap-secrets
+
+  echo "\
+${m_serial}${m_line}
+460800
+modem
+crtscts
+defaultroute
+replacedefaultroute
+usehostname
+user ${m_user}
+noipdefault
+usepeerdns
+idle 0
+connect \"/usr/sbin/chat -E -V -f /etc/chatscripts/movilmodem.chat\"
+" > /etc/ppp/peers/movilmodem
+
+  cmd_pin="OK      AT+CPIN=${m_pin}"
+  if [ "${m_pin}" == "" ]; then
+    cmd_pin="#${cmd_pin}"
+  fi
+
+  echo "\
+''      \"ATZ\"
+${cmd_pin}
+#''      \"AT S7=45 S0=0 L1 V1 X4 &c1 E1 Q0\"
+OK      \"ATZ\"
+#OK      \"ATQ0 V1 E1 S0=0 &C1 &D2 +FCLASS=0\"
+OK      AT+CGDCONT=1,\"IP\",\"${m_apn}\";
+OK      ATDT${m_phone}
+" > /etc/chatscripts/movilmodem.chat
+}  #write_configuration_files
+
+
+restart_internal_modem() {
+  ${INTERNALMODEM} && {
+    echo "1" > /sys/class/gpio/gpio19/value   ; sleep 2
+    echo "0" > /sys/class/gpio/gpio19/value   ; sleep 5
+    echo "0" > /sys/class/gpio/gpio26/value
+
+    /usr/local/bin/uhubctl --action off --ports 2,3,4,5 ; sleep 5  #Power Off
+    /usr/local/bin/uhubctl --action on  --ports 2,3,4,5 ; sleep 5  #Power On
+
+    #Se enciende el Módem
+    echo "1" > /sys/class/gpio/gpio26/value ; sleep 1
+    echo "1" > /sys/class/gpio/gpio19/value ; sleep 1
+    echo "0" > /sys/class/gpio/gpio19/value
+  } || {
+    /usr/local/bin/uhubctl --action off --ports 2,3,4,5 ; sleep 5  #Power Off
+    /usr/local/bin/uhubctl --action on  --ports 2,3,4,5 ; sleep 5  #Power On
+  }
+}  #restart_internal_modem
+
+
+${INTERNALMODEM} && {
+  m_serial=/dev/ttyACM
+  m_line=0
+} || {
+  m_serial=/dev/ttyUSB
+  usbmodem ${m_serial}
+}
+
+write_configuration_files
+
+FORCE=false
+[ "$m_forced" != "0" ] && FORCE=true
+
+log_end_msg
+
+{
+  while $FORCE; do
+    c=0
+    while true; do
+      [ -c ${m_serial}${m_line} ] && break
+      echo "[$(date +%Y-%m-%d_%H:%M:%S)] ${0} Waiting '${m_serial}${m_line}'" >> /root/csclient.log
+      sleep 5
+      c=$((c+1))
+      if [ ${c} -eq 10 ]; then
+        echo "[$(date +%Y-%m-%d_%H:%M:%S)] ${0} reset by NO-SERIAL" >> /root/csclient.log
+        ${INTERNALMODEM} && {
+          restart_internal_modem
+        } || {
+          restart_internal_modem
+          usbmodem ${m_serial}
+          sleep 120
+        }
+        break
+      fi
+    done
+
+    if [ ${c} -lt 10 ]; then
+      echo "[$(date +%Y-%m-%d_%H:%M:%S)] ${0} Start" >> /root/csclient.log
+      ${INTERNALMODEM} && {
+        while true; do
+          output=$(/srv/gsm/gsm.py -port-serial /dev/ttyACM3 -without-all \
+                                   -cmd "AT+CPIN?")
+          if echo "${output}" | /bin/grep -qi 'error'; then
+            echo "[$(date +%Y-%m-%d_%H:%M:%S)] ${0} NotConnected reset by NO-SIM" >> /root/csclient.log
+            restart_internal_modem
+          else
+            output=$(/srv/gsm/gsm.py -port-serial /dev/ttyACM3 -without-all \
+                                     -cmd "AT+CREG?")
+            if   echo "${output}" | /bin/grep -qi '0,1'; then
+              echo "[$(date +%Y-%m-%d_%H:%M:%S)] ${0} Operator 'Registered with operator'" >> /root/csclient.log
+              break
+            elif echo "${output}" | /bin/grep -qi '0,2'; then
+              echo "[$(date +%Y-%m-%d_%H:%M:%S)] ${0} Operator 'MT is currently searching a new operator'" >> /root/csclient.log
+            else
+              echo "[$(date +%Y-%m-%d_%H:%M:%S)] ${0} NotConnected reset by UNKNOWN -> ${output}" >> /root/csclient.log
+              restart_internal_modem
+            fi
+          fi
+          sleep 30
+          echo "[$(date +%Y-%m-%d_%H:%M:%S)] ${0} Start" >> /root/csclient.log
+        done
+      }
+
+      while true; do
+        /usr/bin/pon movilmodem
+
+        printf "[$(date +%Y-%m-%d_%H:%M:%S)] ${0} Disconnect - " >> /root/csclient.log
+        ${INTERNALMODEM} && {
+          output=$(/srv/gsm/gsm.py -port-serial /dev/ttyACM3 -without-all \
+                                   -cmd "AT+CPIN?")
+
+          if echo "${output}" | /bin/grep -qi 'error'; then
+           echo "reset by NO-SIM -> ${output}" >> /root/csclient.log
+          else
+           echo "reset by UNKNOWN -> ${output}" >> /root/csclient.log
+          fi
+          restart_internal_modem
+        } || {
+          echo "reset by UNKNOWN -> ${output}" >> /root/csclient.log
+          restart_internal_modem
+          usbmodem ${m_serial}
+          sleep 120
+        }
+        break
+      done
+    fi  #if c != 10
+  done  #while FORCE
+} > /dev/null 2> /dev/null < /dev/null &
+
+write_pid "movilmodem"

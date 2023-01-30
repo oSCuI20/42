@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# Led Indicador del modo rescate
+#
+
+PREREQ=""
+
+prereqs() {
+	echo "$PREREQ"
+}
+
+case "$1" in
+	prereqs)
+		prereqs
+		exit 0
+	;;
+esac
+
+_IDMODEM='1e0e:0020'    # Qualcomm
+INTERNALMODEM=false
+
+for i in ${_IDMODEM}; do  #for ((i=0; i<${#_IDMODEM[@]}; i++)); do
+  if /usr/bin/lsusb | grep -q "${i}"; then
+    INTERNALMODEM=true
+  fi
+done
+# Fin
+
+. /scripts/functions
+
+log_begin_msg "Parando el modem"
+
+${INTERNALMODEM} && {
+  # Matar proceso
+  kill -9 `cat /var/run/movilmodem.pid`
+  if [ -e /sys/class/gpio/gpio26 ]; then
+    echo "0" > /sys/class/gpio/gpio26/value
+    echo "26" > /sys/class/gpio/unexport
+    sleep 1
+  fi
+
+  if [ -e /sys/class/gpio/gpio19 ]; then
+    echo "0" > /sys/class/gpio/gpio19/value
+    echo "19" > /sys/class/gpio/unexport
+    sleep 1
+  fi
+}
+
+log_end_msg
+
+killall movilmodem pppd chat; killall -9 movilmodem pppd chat

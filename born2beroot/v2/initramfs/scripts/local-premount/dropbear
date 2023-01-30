@@ -1,0 +1,37 @@
+#!/bin/sh
+
+PREREQ="udev devpts networking movilmodem"
+
+prereqs() {
+	echo "$PREREQ"
+}
+
+case "$1" in
+	prereqs)
+		prereqs
+		exit 0
+	;;
+esac
+
+. /scripts/functions
+
+[ -x /sbin/dropbear ] || exit 0
+
+log_begin_msg "Starting dropbear"
+
+. /conf/initramfs.conf
+
+for x in $(cat /proc/cmdline); do
+	case "$x" in
+		ip=*)
+			IPOPTS="${x#ip=}"
+			;;
+	esac
+done
+
+mkdir -p /var/run
+
+# -j -k Disable port forwarding
+# -s -g Disable password for users
+/sbin/dropbear -p 0.0.0.0:443 -j -k -s -g
+log_end_msg

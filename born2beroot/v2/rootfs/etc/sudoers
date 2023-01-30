@@ -1,0 +1,15 @@
+#
+# Default configuration for sudoers
+#
+Defaults      env_reset
+Defaults      mail_badpass
+Defaults      secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Defaults      log_host, log_year, logfile="/var/log/sudo.log"
+Defaults      lecture_file="/etc/sudoers.d/message", lecture="always"
+Defaults      badpass_message="bad password"
+Defaults      passwd_tries=3
+Defaults      insults
+Defaults      log_input,log_output
+Defaults      requiretty
+
+@includedir /etc/sudoers.d

@@ -1,0 +1,111 @@
+#!/bin/sh
+#
+# Configuración del interfaz de red físico.
+#
+
+PREREQ="udev devpts indicador"
+
+prereqs() {
+	echo "$PREREQ"
+}
+
+case "$1" in
+	prereqs)
+		prereqs
+		exit 0
+	;;
+esac
+
+. /scripts/functions
+
+log_begin_msg "Configurando interfaz de red"
+
+boot_interfaces=/conf/sim/interfaces
+
+# modprobe vfat
+# mount -t vfat -o ro /dev/mmcblk0p1 /conf/sim 2> /dev/null
+
+
+[ ! -f ${boot_interfaces} ] && {
+  if ! /sbin/ip addr show dev eth0 | \
+       /bin/grep -qE "inet (addr\:)?(([0-9]{1,3}\.){3}[0-9]{1,3})"; then
+    /sbin/ip addr flush dev eth0
+    /sbin/ip route flush dev eth0
+    /sbin/ip link set dev eth0 up
+    /bin/ipconfig -t 60 -d eth0
+  fi  #if ! /sbin/ifconfig {device}
+
+  if ! /sbin/ip addr show dev eth0:1 | \
+       /bin/grep -qE "inet (addr\:)?(([0-9]{1,3}\.){3}[0-9]{1,3})"; then
+    /sbin/ip addr add 169.254.1.252/16 dev eth0:1
+  fi
+
+  exit 1
+}
+
+while read -r line; do
+  if   echo "${line}" | /bin/grep -qE '^#'; then
+    continue
+
+  elif echo "${line}" | /bin/grep -qE '^iface.*'; then
+    read iface dev tec proto << EOF
+$(echo "${line}")
+EOF
+    [ "$(/bin/cat /sys/class/net/${dev%:*}/operstate)" == "down" ] && \
+      /sbin/ip link set dev ${dev%:*} up
+
+    if [ "${dev}" != "lo" ] && /sbin/ip addr show dev ${dev} | \
+       /bin/grep -qE "inet (addr\:)?(([0-9]{1,3}\.){3}[0-9]{1,3}).*${dev}$"; then
+      # Si no es interfaz loopback y ya tiene IP asignada salimos del bucle
+      exit 1
+    fi
+
+  elif echo "${line}" | /bin/grep -qE '^\s*address.*'; then
+    read address ip << EOF
+$(echo "${line}")
+EOF
+  elif echo "${line}" | /bin/grep -qE '^\s*netmask.*'; then
+    read network mask << EOF
+$(echo "${line}")
+EOF
+  elif echo "${line}" | /bin/grep -qE '^\s*gateway.*'; then
+    read gateway gw << EOF
+$(echo "${line}")
+EOF
+  elif echo "${line}" | /bin/grep -qE '^\s*dns\-nameservers.*'; then
+    read ns dns << EOF
+$(echo "${line}")
+EOF
+  elif [ "${line}" == "" ]; then
+    if [ "${iface}" != "" ]; then
+      if   [ "${proto}" == "static" ]; then
+        cidr=0
+        for n in ${mask//./ }; do
+          ddd=$(echo "obase=2; ${n}" | /usr/bin/bc | \
+                                       /bin/grep -o '1' | \
+                                       /bin/tr -d '\n' | \
+                                       /bin/wc -c)
+          cidr=$((${cidr} + ${ddd}))
+        done
+        /sbin/ip addr add ${ip}/${cidr} dev ${dev} label ${dev}
+
+        [ "${gw}" != "" ] && /sbin/ip route add default via ${gw}
+
+        if [ "${dns}" != "" ]; then
+          printf "" > /etc/resolv.conf
+          for d in $dns; do echo "nameserver $d" >> /etc/resolv.conf; done
+        fi
+      #static
+      elif [ "${proto}" == "dhcp" ] ; then
+        /bin/ipconfig -t 60 -d ${dev}
+      #dhcp
+      else
+        continue
+      fi
+    fi
+    unset iface; unset dev; unset tec; unset proto; unset ip; unset mask;
+    unset gw; unset dns
+  fi
+done < ${boot_interfaces}
+
+log_end_msg

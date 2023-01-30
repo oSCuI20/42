@@ -1,0 +1,49 @@
+#!/bin/sh
+
+PREREQ=""
+prereqs() { echo "$PREREQ"; }
+
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+
+arch=$(uname --machine)
+case ${arch} in
+  armv6l)
+    libarm=/lib/arm-linux-gnueabi
+    ;;
+  armv7l)
+    libarm=/lib/arm-linux-gnueabihf
+    ;;
+esac
+
+
+for lib in libnss_dns libnss_files libresolv; do
+  src=$(/bin/ls ${libarm}/${lib}* 2>/dev/null)
+  for l in ${src}; do  # src puede devolver uno o más rutas al fichero
+    if [ -h "${l}" ]; then
+      # Copia fichero real
+      link=$(/bin/readlink -f "${l}")
+      cp -f "${link}" "${DESTDIR}${libarm}/."
+      [ "${verbose}" = "y" ] && echo "* Adding library ${link}" || true
+      # Crea enlace en el destino
+      linkname=$(/bin/readlink "${l}")
+      ln -sf "${DESTDIR}${libarm}/${linkname}" "${DESTDIR}${l}"
+    else
+      if [ ! -f ${l} ]; then
+        cp "${l}" "${DESTDIR}${l}"
+      fi
+    fi
+  done
+done
+
+cat >"${DESTDIR}/etc/resolv.conf" <<EOF
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOF
+

@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# Led Indicador del modo rescate
+#
+
+PREREQ=""
+
+prereqs() {
+	echo "$PREREQ"
+}
+
+case "$1" in
+	prereqs)
+		prereqs
+		exit 0
+	;;
+esac
+
+. /scripts/functions
+
+
+is_old_rpi_version || {
+  log_begin_msg "Parando led indicador de actividad"
+  # Matar proceso
+  kill -9 `cat /var/run/indicador.pid`
+
+  # Desactivar indicador led
+  echo "0" > /sys/class/gpio/gpio6/value
+  echo "6" > /sys/class/gpio/unexport
+  log_end_msg
+}
