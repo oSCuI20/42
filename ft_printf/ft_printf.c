@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edbander <edbander@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: antgalan <antgalan@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/13 01:09:54 by edbander          #+#    #+#             */
-/*   Updated: 2023/01/22 22:24:59 by edbander         ###   ########.fr       */
+/*   Updated: 2023/01/30 20:34:32 by antgalan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,7 @@ static int	_ft_putchar(char type, va_list args)
 {
 	if (type == '%')
 		ft_putchar_fd('%', 1);
-	else 
+	else
 		ft_putchar_fd(va_arg(args, int), 1);
-
 	return (1);
 }
