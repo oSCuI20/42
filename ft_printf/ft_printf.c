@@ -6,7 +6,7 @@
 /*   By: antgalan <antgalan@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/13 01:09:54 by edbander          #+#    #+#             */
-/*   Updated: 2023/01/31 17:37:59 by antgalan         ###   ########.fr       */
+/*   Updated: 2023/01/31 18:42:46 by antgalan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ static int	_ft_printf_arg(char type, va_list args)
 		ptr = _ft_printf_arg_hex(type, args);
 	ft_putstr_fd(ptr, 1);
 	slen = ft_strlen(ptr);
+	if (!(type == '%' || type == 'c' || type == 's'))
+		free(ptr);
 	return (slen);
 }
 
@@ -94,7 +96,7 @@ static char	*_ft_printf_arg_hex(char type, va_list args)
 				type - 'X'));
 	}
 	return (ft_itoahex_unsigned_long(
-			(unsigned long long) va_arg(args, unsigned int),
+			(unsigned long long) va_arg(args, unsigned long long),
 			format,
 			type - 'X'));
 }
