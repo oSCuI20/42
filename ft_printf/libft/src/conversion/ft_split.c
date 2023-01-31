@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebanderas <edbander@student.42malaga.      +#+  +:+       +#+        */
+/*   By: antgalan <antgalan@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 21:11:57 by ebanderas         #+#    #+#             */
-/*   Updated: 2022/12/06 21:11:59 by ebanderas        ###   ########.fr       */
+/*   Updated: 2023/01/31 17:27:44 by antgalan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	**ft_split(const char *str, char c)
 		start = start + ft_strlen(split[i]);
 		i++;
 	}
-	split[i] = '\0';
+	split[i] = NULL;
 	return (split);
 }
 
