@@ -6,7 +6,7 @@
 /*   By: antgalan <antgalan@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/13 01:09:54 by edbander          #+#    #+#             */
-/*   Updated: 2023/01/31 18:42:46 by antgalan         ###   ########.fr       */
+/*   Updated: 2023/02/01 19:50:43 by antgalan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ static char	*_ft_printf_arg_hex(char type, va_list args)
 	{
 		format = "0x";
 		longarg = va_arg(args, unsigned long long);
-		if (!longarg)
-			return ("0x0");
+//		if (!longarg)
+//			return ("0x0");
 		return (ft_itoahex_unsigned_long(
 				longarg,
 				format,

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edbander <edbander@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: antgalan <antgalan@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 17:55:32 by ebanderas         #+#    #+#             */
-/*   Updated: 2023/01/22 22:03:56 by edbander         ###   ########.fr       */
+/*   Updated: 2023/02/01 20:49:34 by antgalan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ char	*ft_itoahex_unsigned_long(
 	char	*ptr;
 
 	ptr = _ft_tostr_unsigned(number, 16, lower);
+	if (!ptr)
+		return (format);
 	return (ft_strjoin(format, ptr));
 }
 
