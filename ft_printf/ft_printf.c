@@ -6,11 +6,12 @@
 /*   By: antgalan <antgalan@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/13 01:09:54 by edbander          #+#    #+#             */
-/*   Updated: 2023/02/01 19:50:43 by antgalan         ###   ########.fr       */
+/*   Updated: 2023/02/01 20:51:49 by antgalan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./ft_printf.h"
+#include <stdio.h>
 
 static int	_ft_parse_args(const char *str, va_list args);
 static int	_ft_printf_arg(char type, va_list args);
@@ -83,21 +84,18 @@ static char	*_ft_printf_arg_hex(char type, va_list args)
 	char				*ptr;
 	unsigned long long	longarg;
 
-	format = "";
 	if (type == 'p')
 	{
-		format = "0x";
+		format = ft_strdup("0x");
 		longarg = va_arg(args, unsigned long long);
-//		if (!longarg)
-//			return ("0x0");
 		return (ft_itoahex_unsigned_long(
 				longarg,
 				format,
 				type - 'X'));
 	}
 	return (ft_itoahex_unsigned_long(
-			(unsigned long long) va_arg(args, unsigned long long),
-			format,
+			(unsigned int) va_arg(args, unsigned int),
+			ft_strdup(""),
 			type - 'X'));
 }
 

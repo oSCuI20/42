@@ -6,7 +6,7 @@
 /*   By: antgalan <antgalan@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 17:55:32 by ebanderas         #+#    #+#             */
-/*   Updated: 2023/02/01 20:49:34 by antgalan         ###   ########.fr       */
+/*   Updated: 2023/02/01 20:57:11 by antgalan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,15 @@ char	*ft_itoahex_unsigned_long(
 								int lower)
 {
 	char	*ptr;
+	char	*tmp;
 
 	ptr = _ft_tostr_unsigned(number, 16, lower);
 	if (!ptr)
 		return (format);
-	return (ft_strjoin(format, ptr));
+	tmp = ft_strjoin(format, ptr);
+	free(format);
+	free(ptr);
+	return (tmp);
 }
 
 static char	*_ft_tostr(long number, int base, int lower)
