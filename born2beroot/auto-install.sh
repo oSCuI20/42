@@ -36,6 +36,10 @@ main() {
     _grub_install 
     
     _set_firewall
+    
+    # bonus
+    ## I'm use docker container for deploy
+    _setup_docker
 }
 
 _set_locales() {
@@ -47,6 +51,17 @@ _set_locales() {
 _set_crypttab() {
     local _uuid="$(blkid /dev/mapper/${_DISKMAP##*/}p5 | grep -Eo  'UUID=(\"[0-9a-fA-F-]+\") ')"
     echo "${_CRYPTMAP}  ${_uuid} none luks,discard" >> /etc/crypttab
+}
+
+_setup_docker() {
+    apt_install curl gnupg lsb-release
+    mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    echo \
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    apt_install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 }
 
 _adduser() {

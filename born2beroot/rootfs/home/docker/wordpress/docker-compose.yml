@@ -1,0 +1,46 @@
+version: "3.2"
+
+services:
+  httpd:
+    build:
+      dockerfile: compose/lighttpd/Dockerfile
+      context: .
+    depends_on:
+      - wordpress
+      - wp_database
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - type: bind 
+        source: ./run/lighttpd/logs
+        target: /var/log/lighttpd
+    tty: true
+
+  wordpress:
+    image: wordpress:6.1-php8.0-fpm
+    depends_on: 
+      - wp_database
+    environment:
+      WORDPRESS_DB_HOST: wp_database
+      WORDPRESS_DB_USER: wp_born
+      WORDPRESS_DB_PASSWORD: WP_born_pw
+      WORDPRESS_DB_NAME: wp_born2beroot
+      WORDPRESS_TABLE_PREFIX: wpborn_
+    volumes:
+      - type: bind 
+        source: ./run/wordpress
+        target: /var/www/html
+
+  wp_database:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: my-root-pw
+      MARIADB_USER: wp_born
+      MARIADB_PASSWORD: WP_born_pw
+      MARIADB_DATABASE: wp_born2beroot
+    volumes:
+      - type: bind
+        source: ./run/mysql
+        target: /var/lib/mysql
