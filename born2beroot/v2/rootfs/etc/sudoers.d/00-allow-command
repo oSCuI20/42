@@ -1,4 +1,0 @@
-#
-# Allow command or script without password
-#
-${MYUSER}   ALL=(ALL) NOPASSWD: /usr/local/bin/monitoring.sh
