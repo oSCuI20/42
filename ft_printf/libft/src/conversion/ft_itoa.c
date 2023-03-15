@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edbander <edbander@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: antgalan <antgalan@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 17:55:32 by ebanderas         #+#    #+#             */
-/*   Updated: 2023/01/22 22:03:56 by edbander         ###   ########.fr       */
+/*   Updated: 2023/02/01 20:57:11 by antgalan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,15 @@ char	*ft_itoahex_unsigned_long(
 								int lower)
 {
 	char	*ptr;
+	char	*tmp;
 
 	ptr = _ft_tostr_unsigned(number, 16, lower);
-	return (ft_strjoin(format, ptr));
+	if (!ptr)
+		return (format);
+	tmp = ft_strjoin(format, ptr);
+	free(format);
+	free(ptr);
+	return (tmp);
 }
 
 static char	*_ft_tostr(long number, int base, int lower)
